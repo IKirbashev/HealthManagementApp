@@ -1,0 +1,37 @@
+# .NET
+bin/
+obj/
+*.csproj.user
+*.suo
+*.user
+.vscode/
+*.sln.iml
+HealthApp.Api/appsettings.Development.json
+
+# Node.js (Vue.js)
+node_modules/
+dist/
+dist-ssr/
+*.local
+
+# Visual Studio
+.vs/
+*.vsconfig
+
+# macOS
+.DS_Store
+
+# Logs
+*.log
+logs/
+
+# Dependency directories
+HealthApp.Frontend/node_modules/
+
+# Build output
+HealthApp.Frontend/dist/
+
+# Environment files
+.env
+.env.local
+.env.*.local
