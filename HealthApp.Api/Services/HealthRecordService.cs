@@ -17,7 +17,7 @@ namespace HealthApp.Api.Services
             _repository = repository;
         }
 
-        public async Task<List<HealthRecordDto>> GetAllAsync(DateTime? startDate, DateTime? endDate, string type, string keyword)
+        public async Task<(List<HealthRecordDto> Items, int TotalCount)> GetAllAsync(DateTime? startDate, DateTime? endDate, string type, string keyword, int page, int pageSize)
         {
             var query = await _repository.GetAllAsync();
 
@@ -30,23 +30,30 @@ namespace HealthApp.Api.Services
             if (!string.IsNullOrEmpty(keyword))
                 query = query.Where(r => r.Symptoms.Contains(keyword) || r.Recommendations.Contains(keyword));
 
-            return query.Select(r => new HealthRecordDto
-            {
-                Id = r.Id,
-                Date = r.Date,
-                Type = r.Type,
-                Symptoms = r.Symptoms,
-                Recommendations = r.Recommendations,
-                CustomFields = r.CustomFields,
-                Files = r.Files.Select(f => new HealthRecordFileDto
+            var totalCount = query.Count();
+
+            var items = query
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .Select(r => new HealthRecordDto
                 {
-                    Id = f.Id,
-                    HealthRecordId = f.HealthRecordId,
-                    FileName = f.FileName,
-                    FilePath = f.FilePath,
-                    FileType = f.FileType
-                }).ToList()
-            }).ToList();
+                    Id = r.Id,
+                    Date = r.Date,
+                    Type = r.Type,
+                    Symptoms = r.Symptoms,
+                    Recommendations = r.Recommendations,
+                    CustomFields = r.CustomFields,
+                    Files = r.Files.Select(f => new HealthRecordFileDto
+                    {
+                        Id = f.Id,
+                        HealthRecordId = f.HealthRecordId,
+                        FileName = f.FileName,
+                        FilePath = f.FilePath,
+                        FileType = f.FileType
+                    }).ToList()
+                }).ToList();
+
+            return (items, totalCount);
         }
 
         public async Task<HealthRecordDto> GetByIdAsync(Guid id)
@@ -76,6 +83,9 @@ namespace HealthApp.Api.Services
 
         public async Task<HealthRecordDto> CreateAsync(HealthRecordDto dto)
         {
+            if (string.IsNullOrEmpty(dto.Type))
+                throw new ArgumentException("Type is required");
+
             var record = new HealthRecord
             {
                 Id = Guid.NewGuid(),
@@ -93,6 +103,9 @@ namespace HealthApp.Api.Services
 
         public async Task UpdateAsync(Guid id, HealthRecordDto dto)
         {
+            if (string.IsNullOrEmpty(dto.Type))
+                throw new ArgumentException("Type is required");
+
             var record = await _repository.GetByIdAsync(id);
             if (record == null)
                 throw new Exception("Health record not found");

@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HealthApp.Api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250427141203_InitialCreate")]
+    [Migration("20250428104013_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -196,9 +196,10 @@ namespace HealthApp.Api.Migrations
                     b.Property<DateTime?>("EndDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("IntakeTimes")
+                    b.Property<string>("IntakeTime")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(5)
+                        .HasColumnType("nvarchar(5)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -225,34 +226,6 @@ namespace HealthApp.Api.Migrations
                     b.ToTable("Medications");
                 });
 
-            modelBuilder.Entity("HealthApp.Api.Models.Entities.MedicationIntake", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("IntakeTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("MedicationId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Reason")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("MedicationId");
-
-                    b.ToTable("MedicationIntakes");
-                });
-
             modelBuilder.Entity("HealthApp.Api.Models.Entities.HealthRecordFile", b =>
                 {
                     b.HasOne("HealthApp.Api.Models.Entities.HealthRecord", "HealthRecord")
@@ -264,25 +237,9 @@ namespace HealthApp.Api.Migrations
                     b.Navigation("HealthRecord");
                 });
 
-            modelBuilder.Entity("HealthApp.Api.Models.Entities.MedicationIntake", b =>
-                {
-                    b.HasOne("HealthApp.Api.Models.Entities.Medication", "Medication")
-                        .WithMany("Intakes")
-                        .HasForeignKey("MedicationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Medication");
-                });
-
             modelBuilder.Entity("HealthApp.Api.Models.Entities.HealthRecord", b =>
                 {
                     b.Navigation("Files");
-                });
-
-            modelBuilder.Entity("HealthApp.Api.Models.Entities.Medication", b =>
-                {
-                    b.Navigation("Intakes");
                 });
 #pragma warning restore 612, 618
         }

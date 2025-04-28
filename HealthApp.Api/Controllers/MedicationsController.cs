@@ -18,45 +18,81 @@ namespace HealthApp.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
         {
-            var medications = await _service.GetAllAsync();
-            return Ok(medications);
+            try
+            {
+                var (items, totalCount) = await _service.GetAllAsync(page, pageSize);
+                return Ok(new { Items = items, TotalCount = totalCount });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { Message = ex.Message });
+            }
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(Guid id)
         {
-            var medication = await _service.GetByIdAsync(id);
-            return Ok(medication);
+            try
+            {
+                var medication = await _service.GetByIdAsync(id);
+                return Ok(medication);
+            }
+            catch (Exception ex)
+            {
+                return NotFound(new { Message = ex.Message });
+            }
         }
 
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] MedicationDto dto)
         {
-            var created = await _service.CreateAsync(dto);
-            return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
+            try
+            {
+                var created = await _service.CreateAsync(dto);
+                return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { Message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { Message = ex.Message });
+            }
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(Guid id, [FromBody] MedicationDto dto)
         {
-            await _service.UpdateAsync(id, dto);
-            return NoContent();
+            try
+            {
+                await _service.UpdateAsync(id, dto);
+                return NoContent();
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { Message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return NotFound(new { Message = ex.Message });
+            }
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {
-            await _service.DeleteAsync(id);
-            return NoContent();
-        }
-
-        [HttpPost("{id}/intakes")]
-        public async Task<IActionResult> RecordIntake(Guid id, [FromBody] MedicationIntakeDto dto)
-        {
-            var intake = await _service.RecordIntakeAsync(id, dto);
-            return CreatedAtAction(nameof(GetById), new { id = intake.Id }, intake);
+            try
+            {
+                await _service.DeleteAsync(id);
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return NotFound(new { Message = ex.Message });
+            }
         }
     }
 }

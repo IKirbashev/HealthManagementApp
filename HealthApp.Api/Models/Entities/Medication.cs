@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace HealthApp.Api.Models.Entities
@@ -18,7 +17,7 @@ namespace HealthApp.Api.Models.Entities
 
         [Required]
         [StringLength(20)]
-        public string DosageUnit { get; set; } // Например, "мг"
+        public string DosageUnit { get; set; }
 
         [Required]
         public DateTime StartDate { get; set; }
@@ -26,14 +25,13 @@ namespace HealthApp.Api.Models.Entities
         public DateTime? EndDate { get; set; }
 
         [Required]
-        public string IntakeTimes { get; set; } // JSON, например, ["08:00", "20:00"]
+        [StringLength(5)]
+        public string IntakeTime { get; set; } // Например, "08:00"
 
-        public int RepeatEveryNDays { get; set; } = 1; // Повторение через N дней (по умолчанию 1 — ежедневно)
+        public int RepeatEveryNDays { get; set; } = 1;
 
         public string Notes { get; set; }
 
         public Guid UserId { get; set; }
-
-        public List<MedicationIntake> Intakes { get; set; } = new List<MedicationIntake>();
     }
 }

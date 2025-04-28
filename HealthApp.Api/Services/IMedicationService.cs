@@ -7,11 +7,10 @@ namespace HealthApp.Api.Services
 {
     public interface IMedicationService
     {
-        Task<List<MedicationDto>> GetAllAsync();
+        Task<(List<MedicationDto> Items, int TotalCount)> GetAllAsync(int page, int pageSize);
         Task<MedicationDto> GetByIdAsync(Guid id);
         Task<MedicationDto> CreateAsync(MedicationDto dto);
         Task UpdateAsync(Guid id, MedicationDto dto);
         Task DeleteAsync(Guid id);
-        Task<MedicationIntakeDto> RecordIntakeAsync(Guid medicationId, MedicationIntakeDto dto);
     }
 }

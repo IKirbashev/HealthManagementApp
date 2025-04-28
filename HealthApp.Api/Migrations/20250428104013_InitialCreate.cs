@@ -74,7 +74,7 @@ namespace HealthApp.Api.Migrations
                     DosageUnit = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
                     StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     EndDate = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    IntakeTimes = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    IntakeTime = table.Column<string>(type: "nvarchar(5)", maxLength: 5, nullable: false),
                     RepeatEveryNDays = table.Column<int>(type: "int", nullable: false),
                     Notes = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
@@ -101,27 +101,6 @@ namespace HealthApp.Api.Migrations
                         name: "FK_HealthRecordFiles_HealthRecords_HealthRecordId",
                         column: x => x.HealthRecordId,
                         principalTable: "HealthRecords",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "MedicationIntakes",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    MedicationId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    IntakeTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Status = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
-                    Reason = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_MedicationIntakes", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_MedicationIntakes_Medications_MedicationId",
-                        column: x => x.MedicationId,
-                        principalTable: "Medications",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -162,11 +141,6 @@ namespace HealthApp.Api.Migrations
                 column: "Type");
 
             migrationBuilder.CreateIndex(
-                name: "IX_MedicationIntakes_MedicationId",
-                table: "MedicationIntakes",
-                column: "MedicationId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Medications_StartDate",
                 table: "Medications",
                 column: "StartDate");
@@ -185,13 +159,10 @@ namespace HealthApp.Api.Migrations
                 name: "HealthRecordFiles");
 
             migrationBuilder.DropTable(
-                name: "MedicationIntakes");
+                name: "Medications");
 
             migrationBuilder.DropTable(
                 name: "HealthRecords");
-
-            migrationBuilder.DropTable(
-                name: "Medications");
         }
     }
 }

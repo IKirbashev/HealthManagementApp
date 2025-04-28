@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace HealthApp.Api.Models.Dtos
 {
@@ -11,9 +10,8 @@ namespace HealthApp.Api.Models.Dtos
         public string DosageUnit { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime? EndDate { get; set; }
-        public string IntakeTimes { get; set; }
+        public string IntakeTime { get; set; }
         public int RepeatEveryNDays { get; set; }
         public string Notes { get; set; }
-        public List<MedicationIntakeDto> Intakes { get; set; }
     }
 }

@@ -13,12 +13,10 @@ namespace HealthApp.Api.Data
         public DbSet<HealthRecordFile> HealthRecordFiles { get; set; }
         public DbSet<Biomarker> Biomarkers { get; set; }
         public DbSet<Medication> Medications { get; set; }
-        public DbSet<MedicationIntake> MedicationIntakes { get; set; }
         public DbSet<Document> Documents { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // Индексы для поиска
             modelBuilder.Entity<HealthRecord>()
                 .HasIndex(r => r.Date);
             modelBuilder.Entity<HealthRecord>()

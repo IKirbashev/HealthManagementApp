@@ -17,12 +17,12 @@ namespace HealthApp.Api.Data.Repositories
 
         public async Task<IQueryable<Medication>> GetAllAsync()
         {
-            return await Task.FromResult(_context.Medications.Include(m => m.Intakes).AsQueryable());
+            return await Task.FromResult(_context.Medications.AsQueryable());
         }
 
         public async Task<Medication> GetByIdAsync(Guid id)
         {
-            return await _context.Medications.Include(m => m.Intakes).FirstOrDefaultAsync(m => m.Id == id);
+            return await _context.Medications.FirstOrDefaultAsync(m => m.Id == id);
         }
 
         public async Task AddAsync(Medication entity)
